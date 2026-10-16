@@ -351,7 +351,7 @@ const FIRE_GAP=.16,MEGA_GAP=.3,TRIPLE_GAP=.2,POWER_TIME=5;   // seconds between 
 const BOSS_IFRAME=.12;
 const COMBO_BONUS=2;    // catching the other kind of star while one power runs: both sync up (MEGA×3) and gain 2s
 const GOLD_BALLS=5;    // a golden apple knocked off the platform refills 5 apples                    // hits landing together (a triple volley, a mega ball and its blast) count once
-const IRON_HP=6,IRON_GRACE=.4,IRON_REGEN=.22;   // iron heals 1 HP every .22s once .4s pass without a hit
+const IRON_HP=4,IRON_GRACE=.5,IRON_REGEN=.3;    // iron heals 1 HP every .3s once .5s pass without a hit (so only rapid fire breaks it)
 const SHIELD_GRACE=1.0,SHIELD_REGEN=.4;
 const TNT_R=2.5,TNT_POW=9,MEGA_BOOM_R=1.7,MEGA_BOOM_POW=6.5;
 const Y_AXIS=new CANNON.Vec3(0,1,0);
@@ -487,31 +487,30 @@ const STAGE_DEFS=[
  {key:'こおりのとう',name:'こおりのとう',isNew:'ice',build(put){
    for(const x of[-1.7,1.7]){column(put,x,4,{mat:()=>'ice'});put('fake',x,3.6)}
    pyramid(put,2,{mat:()=>'ice',top:'ice'});put('gold',0,1.8)}},
- {key:'ふたつのとう',name:'ふたつのとう',spin:{speed:.7},build(put){
+ {key:'ふたつのとう',name:'ふたつのとう',spin:{speed:.6},build(put){
    for(const x of[-1.4,1.4]){column(put,x,4);put('fake',x,3.6)}put('tnt',0,0);put('crate',0,.9)}},
- {key:'まわるピラミッド',name:'まわるピラミッド',spin:{speed:.6},build(put){
+ {key:'まわるピラミッド',name:'まわるピラミッド',spin:{speed:.5},build(put){
    pyramid(put,4);for(const z of[-1.4,1.4]){column(put,0,2,{z,mat:()=>'ice'});put('fake',0,1.8,{z})}}},
- {key:'ゆきのリング',name:'ゆきのリング',spin:{speed:.5},build(put){
+ {key:'ゆきのリング',name:'ゆきのリング',spin:{speed:.45},build(put){
    column(put,0,3);put('fake',0,2.7);
    for(let i=0;i<6;i++){const [x,z]=polar(1.6,i*Math.PI/3);put(i%2?'ice':'crate',x,0,{z});put(i%2?'crate':'fake',x,.9,{z})}}},
  {key:'こおりのかいだん',name:'こおりのかいだん',build(put){
    for(let c=0;c<5;c++)column(put,-1.86+c*STEP,c+1,{mat:()=>'ice'});put('fake',1.86,4.5);put('fake',-1.86,.9);put('tnt',-3.1,0)}},
- {key:'ふぶきのしろ',name:'ふぶきのしろ',spin:{speed:.6},build(put){
-   for(const z of[-.47,.47])wall(put,3,2,{z,mat:r=>r===0?'stone':'ice'});
+ {key:'ふぶきのしろ',name:'ふぶきのしろ',spin:{speed:.45},build(put){
+   for(const z of[-.47,.47])wall(put,3,2,{z,mat:r=>r===0?'crate':'ice'});
    put('fake',-.465,1.8);put('fake',.465,1.8);
    for(const z of[-1.45,1.45]){column(put,0,2,{z,mat:()=>'ice'});put('fake',0,1.8,{z})}
    for(const x of[-1.85,1.85])put('tnt',x,0)}},
- {key:'こおりのウォール',name:'こおりのウォール',spin:{speed:-.5},build(put){
-   wall(put,4,3,{mat:r=>r===0?'stone':'ice'});put('fake',-.93,2.7);put('fake',.93,2.7);
+ {key:'こおりのウォール',name:'こおりのウォール',spin:{speed:-.4},build(put){
+   wall(put,4,3,{mat:r=>r===0?'crate':'ice'});put('fake',-.93,2.7);put('fake',.93,2.7);
    for(const z of[-1.4,1.4])put('iron',0,0,{z});put('triple',3.4,3.6)}},
- {key:'ぐるぐるとりで',name:'ぐるぐるとりで',spin:{speed:.8},build(put){
+ {key:'ぐるぐるとりで',name:'ぐるぐるとりで',spin:{speed:.65},build(put){
    put('iron',0,0);put('iron',0,.9);put('fake',0,1.8);
    for(let i=0;i<6;i++){const [x,z]=polar(1.7,i*Math.PI/3+Math.PI/6);column(put,x,2,{z});if(i%2===0)put('fake',x,1.8,{z})}put('mega',-3.4,3.6)}},
- {key:'w4-boss',name:'雪山の親分',boss:true,spin:{speed:.5},build(put){
-   put('boss',0,0,{hp:34});
-   for(const a of[-Math.PI/4,-3*Math.PI/4]){const [x,z]=polar(1.3,a);put('stone',x,0,{z})}
-   for(const a of[0,Math.PI,-Math.PI/2]){const [x,z]=polar(1.75,a);column(put,x,2,{z,mat:()=>'ice'});put('fake',x,1.8,{z})}
-   put('mega',-3.5,3.4,{at:.6});put('triple',3.5,3.4,{at:.3})}},
+ {key:'w4-boss',name:'雪山の親分',boss:true,spin:{speed:.45},build(put){
+   put('boss',0,0,{hp:18});
+   for(const a of[0,Math.PI]){const [x,z]=polar(1.75,a);column(put,x,2,{z,mat:()=>'ice'});put('fake',x,1.8,{z})}
+   put('mega',-3.5,3.4,{at:.75});put('triple',3.5,3.4,{at:.3})}},
 
  // ===== World 5 · 火山 (lifting platforms, bomb mountains, iron)
  {key:'あがる台',name:'あがる台',isNew:'lift',lift:{amp:.6,period:5},build(put){
@@ -549,7 +548,7 @@ const STAGE_DEFS=[
    put('slab',0,.9,{w:5.6});
    pyramid(put,3,{y:1.2});put('fake',-2.5,1.2);put('fake',2.5,1.2);put('mega',-3.4,3.8);put('triple',3.4,3.8)}},
  {key:'w5-boss',name:'火山の親分',boss:true,lift:{amp:.45,period:6},build(put){
-   put('boss',0,0,{hp:38});
+   put('boss',0,0,{hp:30});
    for(const x of[-1.4,1.4])put('iron',x,0);
    for(const x of[-2.55,2.55]){put('tnt',x,0);put('crate',x,.9);put('fake',x,1.8)}
    put('mega',-3.4,3.6,{at:.6});put('triple',3.4,3.6,{at:.3})}},
@@ -567,10 +566,10 @@ const STAGE_DEFS=[
  {key:'うちゅうステーション',name:'うちゅうステーション',g:4.2,move:{amp:.8,period:5.5},build(put){
    for(const x of[-2.2,2.2]){put('iron',x,0);put('iron',x,.9)}
    put('slab',0,1.8,{w:5.4});wall(put,3,2,{y:2.1});put('fake',-.465,3.9);put('fake',.465,3.9);
-   put('tnt',0,0);put('crate',0,.9);put('triple',-3.3,3.8,{at:.6})}},
+   put('tnt',0,0);put('crate',0,.9);put('triple',-3.3,3.8,{at:.75})}},
  {key:'w6-ウォール',name:'うちゅうウォール',g:4.2,move:{amp:.6,period:6},build(put){
    wall(put,5,4,{mat:(r,c)=>r===0&&c===2?'iron':'crate'});put('fake',-.93,3.6);put('fake',.93,3.6);put('fake',-3.2,0);put('fake',3.2,0);put('gold',0,3.6)}},
- {key:'ぐるぐるうちゅう',name:'ぐるぐるうちゅう',g:4.2,spin:{speed:.65},build(put){
+ {key:'ぐるぐるうちゅう',name:'ぐるぐるうちゅう',g:4.2,spin:{speed:.5},build(put){
    for(const x of[-1.4,1.4]){column(put,x,3);put('fake',x,2.7)}
    for(const z of[-1.6,1.6]){column(put,0,2,{z,mat:r=>r===0?'iron':'crate'});put('fake',0,1.8,{z})}
    put('tnt',0,0);put('mega',-3.4,3.6)}},
@@ -582,12 +581,12 @@ const STAGE_DEFS=[
    for(let i=0;i<4;i++){const [x,z]=polar(1.75,i*Math.PI/2);column(put,x,3,{z,mat:r=>r===0&&i%2===0?'iron':'crate'});put('fake',x,2.7,{z})}
    pyramid(put,2,{mat:stoneBase});put('mega',-3.4,3.6,{at:.6});put('triple',3.4,3.6)}},
  {key:'w6-boss',name:'キング・ニセチャッピー',boss:true,king:true,g:4.2,spin:{speed:.55},build(put){
-   put('boss',0,0,{hp:44});
+   put('boss',0,0,{hp:28});
    for(let i=0;i<6;i++){const a=i*Math.PI/3,[x,z]=polar(1.6,a);if(z>.5)continue;put(z<-.5?'iron':'tnt',x,0,{z});put('fake',x,.9,{z})}
    put('mega',-3.5,3.8,{at:.6});put('triple',3.5,3.8,{at:.3})}},
 ];
-const CALIB={"ウォームアップ":6,"ゲート":5,"ふたごピラミッド":6,"キャッスル":9,"ばくだん箱":7,"やぐら":10,"ツインタワー":9,"メガキャノン":7,"かいだん":11,"w1-boss":22,"いしのピラミッド":7,"ゆれる台":5,"いしのゲート":8,"ばくだん連鎖":9,"ゆれるウォール":9,"いしがき":10,"ツインタワー改":10,"w2-フレーム":12,"おおピラミッド":12,"w2-boss":25,"てつブロック":16,"よるのゲート":9,"うごくかいだん":10,"ダブルゲート":12,"トリプルショット":7,"うごくツインタワー":10,"ニセチャッピーのとりで":11,"てつのとりで":12,"まだらのかべ":27,"w3-boss":37,"まわる台":4,"こおりのとう":10,"ふたつのとう":6,"まわるピラミッド":9,"ゆきのリング":12,"こおりのかいだん":14,"ふぶきのしろ":17,"こおりのウォール":22,"ぐるぐるとりで":14,"w4-boss":38,"あがる台":11,"ばくだん山":7,"w5-城":13,"w5-はしご":24,"ふたごのばくだん":26,"w5-やぐら":25,"マグマのかべ":20,"てつのかべ":25,"てつとばくだん":9,"w5-boss":50,"むじゅうりょく":12,"メテオばくだん":9,"うちゅうのとう":10,"ほしのリング":9,"うちゅうステーション":21,"w6-ウォール":21,"ぐるぐるうちゅう":26,"てつのほし":17,"w6-さいご":24,"w6-boss":60};
-const WORLD_BALLS=[115,125,175,185,255,245];
+const CALIB={"ウォームアップ":5,"ゲート":5,"ふたごピラミッド":6,"キャッスル":4,"ばくだん箱":5,"やぐら":7,"ツインタワー":6,"メガキャノン":6,"かいだん":7,"w1-boss":22,"いしのピラミッド":5,"ゆれる台":4,"いしのゲート":7,"ばくだん連鎖":5,"ゆれるウォール":6,"いしがき":7,"ツインタワー改":6,"w2-フレーム":11,"おおピラミッド":8,"w2-boss":27,"てつブロック":13,"よるのゲート":6,"うごくかいだん":7,"ダブルゲート":7,"トリプルショット":5,"うごくツインタワー":7,"ニセチャッピーのとりで":7,"てつのとりで":10,"まだらのかべ":25,"w3-boss":33,"まわる台":4,"こおりのとう":7,"ふたつのとう":7,"まわるピラミッド":10,"ゆきのリング":9,"こおりのかいだん":10,"ふぶきのしろ":12,"こおりのウォール":19,"ぐるぐるとりで":15,"w4-boss":21,"あがる台":9,"ばくだん山":3,"w5-城":7,"w5-はしご":23,"ふたごのばくだん":22,"w5-やぐら":23,"マグマのかべ":15,"てつのかべ":24,"てつとばくだん":10,"w5-boss":31,"むじゅうりょく":6,"メテオばくだん":4,"うちゅうのとう":7,"ほしのリング":9,"うちゅうステーション":23,"w6-ウォール":16,"ぐるぐるうちゅう":17,"てつのほし":15,"w6-さいご":20,"w6-boss":41};
+const WORLD_BALLS=[75,95,125,93,130,93];
 // Apples are a pool per world: whatever is left after a stage carries into the next one,
 // and a new world starts again from its own WORLD_BALLS. Each stage keeps a 3-star target (par).
 const STAGES=STAGE_DEFS.map((d,i)=>({...d,par:CALIB[d.key]||8,world:Math.floor(i/10)}));
@@ -857,6 +856,7 @@ try{
 }catch(e){}
 if(!Array.isArray(save.runs))save.runs=[];
 for(const k of['wrun','cleared','wbest'])if(!save[k]||typeof save[k]!=='object')save[k]={};
+if(save.pools!==WORLD_BALLS.join()){save.pools=WORLD_BALLS.join();save.wbest={}}   // leftover records only compare within the same apple pools
 const persist=()=>{try{localStorage.setItem('topple-v2',JSON.stringify(save))}catch(e){}};
 const starsOf=st=>save.stars[st.key]||0;
 // A world run: the stage you're on (0-9, 10 = world cleared), apples left, and the apples you had at the start of each stage.
